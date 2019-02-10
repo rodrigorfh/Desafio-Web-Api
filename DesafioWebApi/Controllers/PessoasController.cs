@@ -18,7 +18,7 @@ namespace DesafioWebApi.Controllers
         // GET: api/Pessoa/{id}
         public Pessoa Get(int id) => res.retornaID(id);
         
-        //  GET: ...
+        //  GET: api/Pessoas?uf={uf}
         public IEnumerable<Pessoa> Get(string uf) => res.retornaPessoasUF(uf);
 
         // POST: api/Pessoa

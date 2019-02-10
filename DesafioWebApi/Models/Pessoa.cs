@@ -13,7 +13,7 @@ namespace DesafioWebApi.Models
             this.cod = cod;
             this.nome = nome;
             this.cpf = cpf;
-            this.uf = uf;
+            this.uf = uf.ToUpper(); 
             data = DateTime.Now;
         }
         

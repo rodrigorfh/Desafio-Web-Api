@@ -8,12 +8,17 @@ namespace DesafioWebApi.Models
     public class DAOpessoa
     {
         List<Pessoa> pessoas = new List<Pessoa>();
-
+        static int i=1;
         public DAOpessoa()
         {
-            pessoas.Add(new Pessoa(1, "Joao", "22830123093", "BH"));
-            pessoas.Add(new Pessoa(2, "Maria", "22830123093", "GO"));
-            pessoas.Add(new Pessoa(3, "Jose", "22830123093", "GO"));
+            pessoas.Add(new Pessoa(gerarCod(), "Joao", "22830123093", "BH"));
+            pessoas.Add(new Pessoa(gerarCod(), "Maria", "22830123093", "GO"));
+            pessoas.Add(new Pessoa(gerarCod(), "Jose", "22830123093", "GO"));
+        }
+
+        public static int gerarCod()
+        {
+            return i++;
         }
 
         // Retorna todas as pessoas
@@ -23,7 +28,7 @@ namespace DesafioWebApi.Models
         public Pessoa retornaID(int id) => pessoas.Where(x => x.cod == id).FirstOrDefault();
 
         // Retorna todas as pessoas filtrado por UF
-        public IEnumerable<Pessoa> retornaPessoasUF(string uf) => pessoas.Where(x => x.uf.Contains(uf));
+        public IEnumerable<Pessoa> retornaPessoasUF(string uf) => pessoas.Where(x => x.uf.Contains(uf.ToUpper()));
 
         // Remove Pessoa com ID 
         public string removerPessoa(int cod)
@@ -43,7 +48,7 @@ namespace DesafioWebApi.Models
             mensagem msg = confereDados(dados);
 
             if (!msg.erro)        
-                pessoas.Add(new Pessoa(dados.cod, dados.nome, dados.cpf, dados.uf));
+                pessoas.Add(new Pessoa(gerarCod(), dados.nome, dados.cpf, dados.uf));
 
             return msg.msg;
         }
@@ -57,10 +62,19 @@ namespace DesafioWebApi.Models
 
             if (!msg.erro)
             {
-                var item = pessoas.Single(x => x.cod == cod);
-                item.nome = dados.nome;
-                item.cpf = dados.cpf;
-                item.uf = dados.uf;
+                Pessoa pessoa;
+                try
+                {
+                    pessoa = pessoas.Single(x => x.cod == cod);
+                }
+                catch
+                {
+                    return "Pessoa não encontrada";
+                }
+               
+                pessoa.nome = dados.nome;
+                pessoa.cpf = dados.cpf;
+                pessoa.uf = dados.uf;
 
             }
 
@@ -83,7 +97,7 @@ namespace DesafioWebApi.Models
             {
                 return new mensagem(true, "Falha CPF");
             }
-
+        
             return new mensagem(false, "Salvo"); ;
         }
 
